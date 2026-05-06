@@ -1,31 +1,31 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Calendar, Menu, Plus, User, LogOut, BarChart3 } from "lucide-react"
-import { useAppSelector, useAppDispatch } from "@/lib/hooks"
-import { logout } from "@/lib/slices/authSlice"
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Calendar, Menu, Plus, User, LogOut, BarChart3 } from 'lucide-react';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { logout } from '@/lib/slices/authSlice';
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth)
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(logout())
-    navigate("/")
-  }
+    dispatch(logout());
+    navigate('/');
+  };
 
   const NavLinks = () => (
     <>
@@ -45,7 +45,7 @@ export function Navbar() {
           >
             My Events
           </Link>
-          {user?.role === "organizer" && (
+          {user?.role === 'organizer' && (
             <Link
               to="/create-event"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -54,7 +54,7 @@ export function Navbar() {
               Create Event
             </Link>
           )}
-          {user?.role === "admin" && (
+          {user?.role === 'admin' && (
             <Link
               to="/admin"
               className="text-sm font-medium transition-colors hover:text-primary"
@@ -66,7 +66,7 @@ export function Navbar() {
         </>
       )}
     </>
-  )
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -84,7 +84,7 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <>
-              {user?.role === "organizer" && (
+              {user?.role === 'organizer' && (
                 <Button asChild size="sm" className="hidden md:flex">
                   <Link to="/create-event">
                     <Plus className="h-4 w-4 mr-2" />
@@ -94,9 +94,15 @@ export function Navbar() {
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name} />
+                      <AvatarImage
+                        src={user?.avatar || '/placeholder.svg'}
+                        alt={user?.name}
+                      />
                       <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -105,7 +111,9 @@ export function Navbar() {
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
                       <p className="font-medium">{user?.name}</p>
-                      <p className="w-[200px] truncate text-sm text-muted-foreground">{user?.email}</p>
+                      <p className="w-[200px] truncate text-sm text-muted-foreground">
+                        {user?.email}
+                      </p>
                     </div>
                   </div>
                   <DropdownMenuSeparator />
@@ -121,7 +129,7 @@ export function Navbar() {
                       My Events
                     </Link>
                   </DropdownMenuItem>
-                  {user?.role === "admin" && (
+                  {user?.role === 'admin' && (
                     <DropdownMenuItem asChild>
                       <Link to="/admin">
                         <BarChart3 className="mr-2 h-4 w-4" />
@@ -159,7 +167,11 @@ export function Navbar() {
                 <NavLinks />
                 {!isAuthenticated && (
                   <>
-                    <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                    <Button
+                      variant="ghost"
+                      asChild
+                      onClick={() => setIsOpen(false)}
+                    >
                       <Link to="/login">Login</Link>
                     </Button>
                     <Button asChild onClick={() => setIsOpen(false)}>
@@ -173,5 +185,5 @@ export function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

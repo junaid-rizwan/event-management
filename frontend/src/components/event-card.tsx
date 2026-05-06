@@ -1,52 +1,60 @@
-"use client"
+'use client';
 
-import { Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Users, DollarSign } from "lucide-react"
-import type { Event } from "@/lib/slices/eventsSlice"
-import { useAppSelector, useAppDispatch } from "@/lib/hooks"
-import { registerForEvent } from "@/lib/slices/eventsSlice"
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
+import type { Event } from '@/lib/slices/eventsSlice';
+import { useAppSelector, useAppDispatch } from '@/lib/hooks';
+import { registerForEvent } from '@/lib/slices/eventsSlice';
 
 interface EventCardProps {
-  event: Event
+  event: Event;
 }
 
 export function EventCard({ event }: EventCardProps) {
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth)
-  const dispatch = useAppDispatch()
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
-  const isRegistered = user && event.attendees.includes(user.id)
-  const isFull = event.ticketsSold >= event.ticketLimit
-  const isOrganizer = user?.id === event.organizerId
+  const isRegistered = user && event.attendees.includes(user.id);
+  const isFull = event.ticketsSold >= event.ticketLimit;
+  const isOrganizer = user?.id === event.organizerId;
 
   const handleRegister = () => {
     if (user && !isRegistered && !isFull) {
-      dispatch(registerForEvent({ eventId: event.id, userId: user.id }))
+      dispatch(registerForEvent({ eventId: event.id, userId: user.id }));
     }
-  }
+  };
 
   const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    })
-  }
+    return new Date(date).toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
 
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       <CardHeader className="p-0">
         <div className="relative overflow-hidden">
           <img
-            src={event.image || "/placeholder.svg"}
+            src={event.image || '/placeholder.svg'}
             alt={event.title}
             className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute top-4 left-4">
-            <Badge variant="secondary" className="bg-background/80 backdrop-blur">
+            <Badge
+              variant="secondary"
+              className="bg-background/80 backdrop-blur"
+            >
               {event.category}
             </Badge>
           </div>
@@ -62,7 +70,9 @@ export function EventCard({ event }: EventCardProps) {
           <h3 className="font-semibold text-xl line-clamp-2 group-hover:text-primary transition-colors">
             {event.title}
           </h3>
-          <p className="text-muted-foreground text-sm line-clamp-2">{event.description}</p>
+          <p className="text-muted-foreground text-sm line-clamp-2">
+            {event.description}
+          </p>
           <div className="flex items-center space-x-4 text-sm text-muted-foreground">
             <div className="flex items-center space-x-1">
               <Calendar className="h-4 w-4" />
@@ -92,11 +102,15 @@ export function EventCard({ event }: EventCardProps) {
           <Link to={`/events/${event.id}`}>View Details</Link>
         </Button>
         {isAuthenticated && !isOrganizer && (
-          <Button onClick={handleRegister} disabled={isRegistered || isFull} className="flex-1">
-            {isRegistered ? "Registered" : isFull ? "Sold Out" : "Register"}
+          <Button
+            onClick={handleRegister}
+            disabled={isRegistered || isFull}
+            className="flex-1"
+          >
+            {isRegistered ? 'Registered' : isFull ? 'Sold Out' : 'Register'}
           </Button>
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }

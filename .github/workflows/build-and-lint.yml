@@ -1,0 +1,50 @@
+name: build-and-lint
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    #--clones code in vm without this the vm dont have access to the code
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # ── Backend ──────────────────────────────
+      - name: Install backend deps
+        working-directory: backend
+        run: npm ci
+
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint -- --max-warnings=0
+
+      # ── Frontend ─────────────────────────────
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint -- --max-warnings=0
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      # ── Docker images ─────────────────────────
+      - name: Build backend Docker image
+        run: docker build -t backend ./backend
+
+      - name: Build frontend Docker image
+        run: docker build -t frontend ./frontend
