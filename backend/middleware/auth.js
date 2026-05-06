@@ -32,7 +32,7 @@ exports.protect = async (req, res, next) => {
         }
 
         next();
-    } catch (err) {
+    } catch (_err) {
         return res.status(401).json({
             success: false,
             message: 'Not authorized to access this route'
@@ -65,7 +65,7 @@ exports.optionalAuth = async (req, res, next) => {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await User.findById(decoded.id);
-        } catch (err) {
+        } catch (_err) {
             // Token is invalid, but we don't fail the request
             req.user = null;
         }
